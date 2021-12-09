@@ -2,6 +2,8 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import styles from '../assets/styles';
 import {DeleteButton} from './index';
+import {deleteTodoAction} from '../store/actions/todo';
+import {connect} from 'react-redux';
 
 interface TodoItemProps {
   index: number;
@@ -10,22 +12,26 @@ interface TodoItemProps {
   deleteTodo: (todoId: string) => void;
 }
 
-const TodoItem = ({todoName, id, deleteTodo, index}: TodoItemProps) => {
+const TodoItem = ({todoName, id, index, deleteTodo}: TodoItemProps) => {
   return (
     <View style={styles.todoItemContainer}>
       <View style={styles.todoNumber}>
         <Text style={styles.todoNumberText}>{index}</Text>
       </View>
-      <View style={styles.todoItem}>
-        <Text>{`${todoName} todoID: ${id}`}</Text>
-        <DeleteButton
-          deleteTodo={() => {
-            deleteTodo(id);
-          }}
-        />
-      </View>
+      <Text style={styles.todoItem}>{`${todoName} todoID: ${id}`}</Text>
+      <DeleteButton
+        deleteTodo={() => {
+          deleteTodo(id);
+        }}
+      />
     </View>
   );
 };
 
-export default TodoItem;
+function mapDispatchToProps(dispatch: any) {
+  return {
+    deleteTodo: (todoId: string) => dispatch(deleteTodoAction(todoId)),
+  };
+}
+
+export default connect(null, mapDispatchToProps)(TodoItem);

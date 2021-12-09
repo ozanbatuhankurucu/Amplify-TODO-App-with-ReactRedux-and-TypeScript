@@ -16,26 +16,19 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {generateUniqueID} from './src/utils/utils';
 import styles from './src/assets/styles';
 import {TodoItem} from './src/components';
+import {addTodoAction} from './src/store/actions/todo';
+import {Todo} from './src/store/reducers/types';
+import {connect} from 'react-redux';
 
-interface Todo {
-  todoName: string;
-  id: string;
+interface AppProps {
+  todos: Array<Todo>;
+  addTodo: (todoName: string) => void;
 }
 
-const App = () => {
-  const [todos, setTodos] = useState<Array<Todo>>([]);
+const App = ({todos, addTodo}: AppProps) => {
   const [todo, setTodo] = useState('');
-
-  const deleteTodo = (todoId: string) => {
-    setTodos(prev => prev.filter(todoItem => todoItem.id !== todoId));
-  };
-  const addTodo = () => {
-    setTodos(prev => [...prev, {todoName: todo, id: generateUniqueID()}]);
-  };
-
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <ScrollView contentContainerStyle={styles.viewContainer}>
@@ -44,7 +37,9 @@ const App = () => {
           onChangeText={text => setTodo(text)}
           style={styles.inputStyle}
         />
-        <TouchableOpacity style={styles.addButton} onPress={addTodo}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => addTodo(todo)}>
           <Text style={styles.addButtonText}>Add Todo</Text>
         </TouchableOpacity>
         {todos.map((todoItem: Todo, index: number) => (
@@ -53,7 +48,6 @@ const App = () => {
             key={todoItem.id}
             todoName={todoItem.todoName}
             id={todoItem.id}
-            deleteTodo={deleteTodo}
           />
         ))}
       </ScrollView>
@@ -61,4 +55,16 @@ const App = () => {
   );
 };
 
-export default App;
+function mapStateToProps(state: any) {
+  return {
+    todos: state.todoReducer.todos,
+  };
+}
+
+function mapDispatchToProps(dispatch: any) {
+  return {
+    addTodo: (todoName: string) => dispatch(addTodoAction(todoName)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

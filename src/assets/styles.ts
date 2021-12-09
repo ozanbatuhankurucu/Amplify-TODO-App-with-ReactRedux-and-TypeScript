@@ -37,10 +37,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     backgroundColor: '#e76f51',
     borderRadius: 8,
+    alignSelf: 'flex-end',
+    marginTop: 8,
   },
   removeButtonText: {color: '#fff'},
   todoItemContainer: {
     flexDirection: 'column',
+    justifyContent: 'flex-start',
     width: '100%',
     marginTop: 16,
     borderWidth: 1,
@@ -50,9 +53,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   todoItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     marginTop: 8,
   },
   todoNumber: {
